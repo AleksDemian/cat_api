@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "754389479639",
+    "project_id": "cat-api-e9d44",
+    "storage_bucket": "cat-api-e9d44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754389479639:android:d8d3bb165f29e5892c0092",
+        "android_client_info": {
+          "package_name": "com.demian.firebase.cat_api"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754389479639-lp1ito5enbf34mnv8eq2umnd4v4v1fos.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.demian.firebase.cat_api",
+            "certificate_hash": "e2cf614a12db7d599498b5a040551020fbd8282d"
+          }
+        },
+        {
+          "client_id": "754389479639-p96lqarnlrda20048kh4oggv4rk2tnbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGoF8rQvMCVAfB0twQbH77Yx6VoUDnaPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754389479639-p96lqarnlrda20048kh4oggv4rk2tnbq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "754389479639-kos4134a7os5fji2b1jad27kkgcmh1at.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.demian.firebase.catApi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

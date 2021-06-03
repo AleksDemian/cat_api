@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Flutter Login CatApi</string>
+    <string name="facebook_app_id">835673583704387</string>
+    <string name="fb_login_protocol_scheme">fb835673583704387</string>
+</resources>
