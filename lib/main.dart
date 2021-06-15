@@ -1,54 +1,59 @@
-import 'package:cat_api/src/core/bloc/app_bloc.dart';
-import 'package:cat_api/src/core/bloc/auth_bloc.dart';
-import 'package:cat_api/src/core/bloc/bloc.dart';
-import 'package:cat_api/src/core/preferences/preferences_repository.dart';
-import 'package:cat_api/src/module/settings/ui/login.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cat_api/bloc/auth_bloc/bloc.dart';
+import 'package:cat_api/bloc/cat_facts/bloc.dart';
+import 'package:cat_api/bloc/cat_images/bloc.dart';
+import 'package:cat_api/bloc/cat_likes/bloc.dart';
+import 'package:cat_api/screens/home/home_page_guess.dart';
+import 'package:cat_api/screens/home/home_screen_user.dart';
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart';
-import 'package:provider/provider.dart';
-import 'package:cat_api/src/core/di/injector.dart';
-import 'package:cat_api/src/common/enum/connectivity_status.dart';
-import 'package:cat_api/src/common/services/connectivity_service.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  inject();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final AppBloc _bloc =
-  AppBloc(KiwiContainer().resolve<PreferencesRepository>());
-
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => AuthBloc(),
-      child: MultiProvider(
-        providers: [
-          StreamProvider<ConnectivityStatus>(
-              create: (context) =>  ConnectivityService().connectionStatusController.stream,
-              initialData: ConnectivityStatus.values.last
-          ),
-
-        ],
-        child: BlocProvider<AppBloc>(
-          bloc: _bloc,
-          child: MaterialApp(
-            title: 'Flutter Login CatApi',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-              fontFamily: 'Raleway',
-            ),
-            home: LoginScreen(),
-          ),
-        ),
-      ),
-    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return MaterialApp(home: Text('Error connecting to firebase'));
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<CatsBloc>(
+                    create: (context) => CatsBloc()..add(InitialCats())),
+                BlocProvider<CatFactsBloc>(
+                    create: (context) => CatFactsBloc()..add(FactsLoaded())),
+                BlocProvider<LikeBloc>(create: (context) => LikeBloc()),
+                BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+              ],
+              child: BlocBuilder<AuthBloc, AuthState>(
+                  buildWhen: (previous, current) {
+                    return true;
+                  }, builder: (context, state) {
+                if (state is AuthSuccess) {
+                  if (state.currentUser != null) {
+                    return MaterialApp(
+                      title: 'Cats App',
+                      home: HomeScreenUser(),
+                    );
+                  } else {
+                    return Login();
+                  }
+                } else {
+                  return Login();
+                }
+              }),
+            );
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 }
-
-
